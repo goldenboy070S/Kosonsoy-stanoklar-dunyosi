@@ -1,0 +1,173 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% trans "Kosonsoy Stanoklar Dunyosi" %}{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="{% static 'images/logo-removebg-preview.png' %}" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ef4444;
+            --secondary-color: #1f2937;
+            --accent-color: #f59e0b;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+        }
+
+        [data-theme="dark"] {
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --bg-primary: #000000;
+            --bg-secondary: #111827;
+        }
+
+        body {
+            font-family: 'Inter', 'Arial', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .modal {
+            background: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body data-theme="light">
+    <!-- Navigation Header -->
+    <nav class="bg-gray-800 backdrop-blur-sm border-b border-gray-200 px-4 py-2 fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 shadow-lg">
+                    <img src="{% static 'images/logo-removebg-preview.png' %}" alt="Logo">
+                </div>
+                <div class="hidden sm:block">
+                    <h1 class="text-gray-100 font-bold text-lg">{% trans "Kosonsoy" %}</h1>
+                    <p class="text-gray-100 text-xs">{% trans "Stanoklar Dunyosi" %}</p>
+                </div>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden lg:flex items-center space-x-8">
+                <a href="{% url 'index' %}" class="text-gray-100 hover:text-red-500 transition-all duration-300 text-sm font-medium">
+                    {% trans "Bosh sahifa" %}
+                </a>
+                <a href="{% url 'index' %}#products" class="text-gray-100 hover:text-red-500 transition-all duration-300 text-sm font-medium">
+                    {% trans "Mahsulotlar" %}
+                </a>
+                <a href="{% url 'index' %}#experience" class="text-gray-100 hover:text-red-500 transition-all duration-300 text-sm font-medium">
+                    {% trans "Biz haqimizda" %}
+                </a>
+                <a href="{% url 'index' %}#news" class="text-gray-100 hover:text-red-500 transition-all duration-300 text-sm font-medium">
+                    {% trans "Yangiliklar" %}
+                </a>
+                <a href="{% url 'index' %}#contact" class="text-gray-100 hover:text-red-500 transition-all duration-300 text-sm font-medium">
+                    {% trans "Bog'lanish" %}
+                </a>
+            </div>
+
+            <!-- Right Side (Language + Phone) -->
+            <div class="hidden md:flex items-center space-x-3">
+                <form action="{% url 'set_language' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <select name="language" onchange="this.form.submit()" 
+                            class="bg-blue-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg">
+                        <option value="uz" {% if request.LANGUAGE_CODE == 'uz' %}selected{% endif %}>O‘zbekcha</option>
+                        <option value="en" {% if request.LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
+                        <option value="ru" {% if request.LANGUAGE_CODE == 'ru' %}selected{% endif %}>Русский</option>
+                    </select>
+                </form>
+
+                <button onclick="openPhoneModal()" class="bg-gray-700 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-600 transition-all duration-300 shadow-lg">
+                    <i class="fas fa-phone mr-1"></i>{% trans "Telefon" %}
+                </button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="lg:hidden text-white" onclick="toggleMobileMenu()">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="hidden lg:hidden fixed inset-0 right-0 w-full min-h-screen pb-6 border-t border-gray-200 bg-white shadow-lg z-40">
+                <div class="fixed top-4 right-4">
+                    <button class="lg:hidden text-gray-700" onclick="toggleMobileMenu()">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="flex flex-col space-y-8 mt-20 text-center relative px-6">
+                    <a onclick="closeMobileMenu()" href="{% url 'index' %}" class="text-gray-800 hover:text-red-500 transition-colors text-base font-medium">{% trans "Bosh sahifa" %}</a>
+                    <a onclick="closeMobileMenu()" href="{% url 'index' %}#products" class="text-gray-800 hover:text-red-500 transition-colors text-base font-medium">{% trans "Mahsulotlar" %}</a>
+                    <a onclick="closeMobileMenu()" href="{% url 'index' %}#experience" class="text-gray-800 hover:text-red-500 transition-colors text-base font-medium">{% trans "Biz haqimizda" %}</a>
+                    <a onclick="closeMobileMenu()" href="{% url 'index' %}#news" class="text-gray-800 hover:text-red-500 transition-colors text-base font-medium">{% trans "Yangiliklar" %}</a>
+                    <a onclick="closeMobileMenu()" href="{% url 'index' %}#contact" class="text-gray-800 hover:text-red-500 transition-colors text-base font-medium">{% trans "Bog'lanish" %}</a>
+
+                    <!-- Mobile Language Switch -->
+                    <form action="{% url 'set_language' %}" method="post" class="mx-auto w-11/12">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <select name="language" onchange="this.form.submit()" 
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium w-full focus:ring-2 focus:ring-blue-400">
+                            <option value="uz" {% if request.LANGUAGE_CODE == 'uz' %}selected{% endif %}>O‘zbekcha</option>
+                            <option value="en" {% if request.LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
+                            <option value="ru" {% if request.LANGUAGE_CODE == 'ru' %}selected{% endif %}>Русский</option>
+                        </select>
+                    </form>
+
+                    <button onclick="openPhoneModal()" class="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-all duration-300 mx-auto w-11/12 shadow-sm border border-gray-200">
+                        <i class="fas fa-phone mr-2"></i>{% trans "Telefon" %}
+                    </button>
+
+                    <div class="border-t border-gray-200 mt-8 pt-8 text-center">
+                        <p class="text-gray-500">&copy;{% trans "2024 Kosonsoy Stanoklar Dunyosi. Barcha huquqlar himoyalangan." %}</p>
+                        <a href="https://myaura.uz/uz/"><p class="text-blue-400">&copy; {% trans "created by AURA Group" %}</p></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    {% block content %}
+    {% endblock %}
+
+    <!-- Phone Modal -->
+    <div id="phoneModal" class="modal fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-xl p-8 max-w-md w-full text-center">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-white">{% trans "Telefon raqamlarimiz" %}</h3>
+                <button onclick="closeModal('phoneModal')" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <p class="text-gray-400 text-sm">{% trans "Bosh ofis" %}</p>
+                    <p class="text-white text-xl font-bold">+998 987713171</p>
+                </div>
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <p class="text-gray-400 text-sm">{% trans "Aloqa" %}</p>
+                    <p class="text-white text-xl font-bold">+998 945050634</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/gallery.js' %}"></script>
+</body>
+</html>

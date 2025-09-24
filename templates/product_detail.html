@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{% blocktrans %}CNC Stanok Ehtiyot Qismlari - Kosonsoy Stanoklar Dunyosi{% endblocktrans %}{% endblock title %}
+
+{% block content %}
+<div class="pt-20 pb-20 px-5 sm:px-6 lg:px-14 bg-white">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+
+            <!-- Product Image / Video Thumbnail -->
+            <div class="rounded-lg overflow-hidden shadow-lg">
+                {% if product.video_url %}
+                    <iframe width="616" height="315" class="overflow-hidden p-4 rounded-[25px]"
+                        src="https://www.youtube.com/embed/TmKz4hdN6nw?autoplay=0"
+                        title="YouTube video"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+
+                {% elif product.image %}
+                    <img src="{{ product.image.url }}"
+                         alt="{{ product.name }}"
+                         class="w-full h-auto object-cover cursor-pointer"
+                         onclick="openImageModal('{{ product.image.url }}', 0)">
+                {% else %}
+                    <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
+                        <span class="text-gray-500">{% trans "Rasm mavjud emas" %}</span>
+                    </div>
+                {% endif %}
+
+                <!-- Extra Images -->
+                {% if product.images.exists %}
+                    <div class="grid grid-cols-3 gap-2 mt-4 px-4">
+                        {% for extra_image in product.images.all|slice:":3" %}
+                            <img src="{{ extra_image.image.url }}"
+                                 alt="{{ product.name }} - Extra"
+                                 class="w-full h-24 object-cover cursor-pointer rounded"
+                                 onclick="openImageModal('{{ extra_image.image.url }}', {{ forloop.counter }})">
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Product Info -->
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ product.name }}</h1>
+                <p class="text-2xl font-bold text-red-600 mb-6">{{ product.price|floatformat:0|intcomma }} {% trans "so'm" %}</p>
+
+                <!-- Description -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-3">{% trans "Mahsulot haqida" %}</h2>
+                    <p class="text-gray-600">
+                        {% if product.description %}
+                            {{ product.description }}
+                        {% else %}
+                            {% trans "Professional CNC stanoklar uchun yuqori sifatli ehtiyot qismlar. Uzoq muddat xizmat qiladi va ishonchli. Yuqori sifatli materialdan tayyorlangan va xalqaro standartlarga javob beradi." %}
+                        {% endif %}
+                    </p>
+                </div>
+
+                <!-- Features -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-3">{% trans "Xususiyatlari" %}</h2>
+                    <ul class="space-y-2">
+                        {% if features_list %}
+                            {% for feature in features_list %}
+                                <li class="flex items-start">
+                                    <svg class="h-5 w-5 text-red-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span class="text-gray-600">{{ feature.value }}</span>
+                                </li>
+                            {% endfor %}
+                {% else %}
+                    <li class="flex items-start">... (default list) ...</li>
+                {% endif %}
+
+                    </ul>
+                </div>
+
+             <!-- Order Buttons -->
+<div class="border-t border-gray-200 pt-6 flex flex-wrap gap-4 items-center">
+    <!-- Telegram orqali bog‘lanish -->
+    <a href="https://t.me/+998987713171" target="_blank"
+       class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 flex items-center">
+        <i class="fas fa-shopping-cart mr-2"></i> {% trans "Buyurtma berish uchun bog‘lanish" %}
+    </a>
+
+    <!-- Telefon orqali bog‘lanish -->
+    <a href="tel:+998908887070"
+       class="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 flex items-center">
+        <i class="fas fa-phone-alt mr-2"></i> {% trans "Telefon" %}
+    </a>
+</div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Image Modal -->
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center z-50">
+    <div class="relative max-w-4xl w-full mx-4">
+        <button onclick="closeImageModal()" class="absolute top-4 right-4 z-50 text-white text-3xl font-bold bg-gray-800 rounded-full px-3 py-1 hover:bg-gray-600">&times;</button>
+        <div class="carousel relative">
+            <img id="modalImage" src="" alt="Enlarged Image" class="w-full h-auto object-contain max-h-[80vh]">
+            <button onclick="prevImage()" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-3 rounded-full hover:bg-gray-600 text-xl">&lt;</button>
+            <button onclick="nextImage()" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-3 rounded-full hover:bg-gray-600 text-xl">&gt;</button>
+        </div>
+    </div>
+</div>
+
+<!-- Video Modal -->
+<div id="videoModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center z-50">
+    <div class="relative max-w-4xl w-full mx-4">
+        <button onclick="closeVideoModal()" class="absolute top-4 right-4 z-50 text-white text-3xl font-bold bg-gray-800 rounded-full px-3 py-1 hover:bg-gray-600">&times;</button>
+        <iframe id="videoFrame" class="w-full h-96 md:h-[600px]" src="" title="YouTube video player" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+</div>
+
+<script>
+    let currentIndex = 0;
+    const images = [
+        {% if product.image %}"{{ product.image.url }}",{% endif %}
+        {% for extra_image in product.images.all|slice:":3" %}
+            "{{ extra_image.image.url }}"{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    function openImageModal(src, index) {
+        if (images.length > 0) {
+            currentIndex = index % images.length;
+            document.getElementById('modalImage').src = images[currentIndex];
+            document.getElementById('imageModal').classList.remove('hidden');
+        }
+    }
+
+    function closeImageModal() {
+        document.getElementById('imageModal').classList.add('hidden');
+        document.getElementById('modalImage').src = '';
+    }
+
+    function prevImage() {
+        if (images.length > 0) {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            document.getElementById('modalImage').src = images[currentIndex];
+        }
+    }
+
+    function nextImage() {
+        if (images.length > 0) {
+            currentIndex = (currentIndex + 1) % images.length;
+            document.getElementById('modalImage').src = images[currentIndex];
+        }
+    }
+
+    function openVideoModal(videoId) {
+        document.getElementById('videoFrame').src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        document.getElementById('videoModal').classList.remove('hidden');
+    }
+
+    function closeVideoModal() {
+        document.getElementById('videoFrame').src = '';
+        document.getElementById('videoModal').classList.add('hidden');
+    }
+
+</script>
+<script src="{% static 'js/gallery.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,1452 @@
+{% load static %}
+{% load i18n %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "KOSONSOY STANOKLAR DUNYOSI" %}</title>
+    <link rel="shortcut icon" href="logo-removebg-preview.png" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ef4444;
+            --secondary-color: #1f2937;
+            --accent-color: #f59e0b;
+            /* Changed default theme to light mode */
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+        }
+
+        [data-theme="dark"] {
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --bg-primary: #000000;
+            --bg-secondary: #111827;
+        }
+
+        * {
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', 'Arial', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .nav-item:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Added video container styles */
+        .video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .play-pause-btn {
+            width: 3rem;
+            height: 3rem;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-pause-btn:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 5;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .typing-animation {
+            border-right: 2px solid var(--primary-color);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            50% {
+                border-color: transparent;
+            }
+
+            51%,
+            100% {
+                border-color: var(--primary-color);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .counter {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--primary-color);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+
+        .modal {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            cursor: pointer;
+            border: 2px solid var(--primary-color);
+        }
+
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 22px;
+            height: 22px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        [data-theme="light"] .theme-toggle::before {
+            transform: translateX(26px);
+        }
+
+        .loading-spinner {
+            border: 3px solid var(--bg-secondary);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .product-filter {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .product-card {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(239, 68, 68, 0.1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(239, 68, 68, 0.2);
+        }
+
+        .news-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(239, 68, 68, 0.1);
+        }
+
+        .news-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.1);
+        }
+
+        .contact-form {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.1);
+        }
+
+        .branch-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .branch-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .bottom-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            z-index: 999;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            margin: 60px 0;
+        }
+
+        /* Added styles for detail modals */
+        .detail-modal {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .detail-modal-content {
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .product-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .gallery-image {
+            aspect-ratio: 1;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-image:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                min-height: calc(100vh - 60px);
+            }
+
+            .counter {
+                font-size: 2rem;
+            }
+
+            .detail-modal-content {
+                margin: 20px;
+                max-height: calc(100vh - 40px);
+            }
+
+            .video-controls {
+                bottom: 1rem;
+                left: 1rem;
+            }
+        }
+        #probarContainer {
+             position: fixed;
+             top: 0;
+             left: 0;
+             width: 100%;
+             height: 4px; /* balandligi */
+             background-color: #f1f1f1;
+             z-index: 9999;
+            }
+
+        #probar {
+             height: 100%;
+             width: 0;
+             background: #ef4444;
+             transition: width 0.1s ease;
+            }
+
+    </style>
+</head>
+
+<body class="overflow-x-hidden" data-theme="light">
+    <div id="probarContainer">
+      <div id="probar"></div>
+    </div>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+        <div class="flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span id="notificationText">{% trans "Xabar yuborildi!" %}</span>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <nav class="bg-gray-800 backdrop-blur-sm border-b border-gray-200 px-4 py-2 fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <div class="w-10 h-10  rounded-lg flex items-center justify-center mr-3 shadow-lg">
+                    <span class="">
+                        <img src="{% static 'images/logo-removebg-preview.png' %}" alt="Logo">
+                    </span>
+                </div>
+                <div class="hidden sm:block">
+                    <h1 class="text-gray-100 font-bold text-lg">{% trans "Kosonsoy" %}</h1>
+                    <p class="text-gray-100 text-xs">{% trans "Stanoklar Dunyosi" %}</p>
+                </div>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden lg:flex items-center space-x-8">
+                <a href="{% url 'index' %}#home"
+                    class="text-gray-100 hover:text-red-500 transition-all duration-300 text-sm font-medium">
+                    {% trans "Bosh sahifa" %}
+                </a>
+                <a href="{% url 'index' %}#products"
+                    class="text-gray-100 hover:text-red-500 transition-all duration-300 text-sm font-medium">
+                    {% trans "Mahsulotlar" %}
+                </a>
+                <a href="{% url 'index' %}#experience"
+                    class="text-gray-100 hover:text-red-500 transition-all duration-300 text-sm font-medium">
+                    {% trans "Biz haqimizda" %}
+                </a>
+                <a href="{% url 'index' %}#news"
+                    class="text-gray-100 hover:text-red-500 transition-all duration-300 text-sm font-medium">
+                    {% trans "Yangiliklar" %}
+                </a>
+                <a href="{% url 'index' %}#contact"
+                    class="text-gray-100 hover:text-red-500 transition-all duration-300 text-sm font-medium">
+                    {% trans "Bog'lanish" %}
+                </a>
+            </div>
+
+            <!-- Right Side (Select + Buttons) -->
+            <!-- Right Side (Select + Buttons) -->
+<div class="hidden md:flex items-center space-x-3">
+    <form action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <select name="language" onchange="this.form.submit()"
+            class="bg-blue-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg">
+            <option value="uz" {% if request.LANGUAGE_CODE == 'uz' %}selected{% endif %}>O‘zbekcha</option>
+            <option value="ru" {% if request.LANGUAGE_CODE == 'ru' %}selected{% endif %}>Русский</option>
+            <option value="en" {% if request.LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
+        </select>
+    </form>
+
+    <button onclick="openPhoneModal()"
+        class="bg-gray-700 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-600 transition-all duration-300 shadow-lg">
+        <i class="fas fa-phone mr-1"></i>{% trans "Telefon" %}
+    </button>
+</div>
+
+
+            <!-- Mobile Menu Button -->
+            <button class="lg:hidden text-white" onclick="toggleMobileMenu()">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                    </path>
+                </svg>
+            </button>
+
+
+
+            <!-- Mobile Menu -->
+            <!-- Mobile Menu (light / white background) -->
+            <div id="mobileMenu"
+                class="hidden lg:hidden fixed inset-0 right-0 w-full min-h-screen pb-6 border-t border-gray-200 bg-white shadow-lg z-40">
+
+                <!-- Close button (fixed in corner) -->
+                <div class="fixed top-4 right-4">
+                    <button class="lg:hidden text-gray-700" onclick="toggleMobileMenu()">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="flex flex-col space-y-8 mt-20 text-center relative px-6">
+
+                    <!-- Links (dark text for light bg) -->
+                    <a onclick="closeMobileMenu()" href="{% url 'index' %}"
+                        class="text-gray-800 hover:text-red-500 transition-colors text-base font-medium">{% trans "Bosh sahifa" %}</a>
+                    <a onclick="closeMobileMenu()" href="{% url 'index' %}#products"
+                        class="text-gray-800 hover:text-red-500 transition-colors text-base font-medium">{% trans "Mahsulotlar" %}</a>
+                    <a onclick="closeMobileMenu()" href="{% url 'index' %}#experience"
+                        class="text-gray-800 hover:text-red-500 transition-colors text-base font-medium">{% trans "Biz haqimizda" %}</a>
+                    <a onclick="closeMobileMenu()" href="{% url 'index' %}#news"
+                        class="text-gray-800 hover:text-red-500 transition-colors text-base font-medium">{% trans "Yangiliklar" %}</a>
+                    <a onclick="closeMobileMenu()" href="{% url 'index' %}#contact"
+                        class="text-gray-800 hover:text-red-500 transition-colors text-base font-medium">{% trans "Bog'lanish" %}</a>
+
+                    <!-- Language select -->
+                 <!-- Language select (Mobile) -->
+<form action="{% url 'set_language' %}" method="post" class="mx-auto w-11/12">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    <select name="language" onchange="this.form.submit()"
+        class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium w-full focus:ring-2 focus:ring-blue-400">
+        <option value="uz" {% if request.LANGUAGE_CODE == 'uz' %}selected{% endif %}>O‘zbekcha</option>
+        <option value="ru" {% if request.LANGUAGE_CODE == 'ru' %}selected{% endif %}>Русский</option>
+        <option value="en" {% if request.LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
+    </select>
+</form>
+
+
+                    <!-- Logo (fixed position corrected) -->
+                    <div class="fixed left-4 top-4 rounded-full">
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center mr-6 bg-white">
+                            <img src="{% static 'images/logo-removebg-preview.png' %}" alt="logo" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+<!--                    <button onclick="openConsultationModal()"-->
+<!--                        class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-all duration-300 mx-auto w-11/12 shadow-md">-->
+<!--                        <i class="fas fa-calendar-alt mr-2"></i>{% trans "Konsultatsiya" %}-->
+<!--                    </button>-->
+
+                    <button onclick="openPhoneModal()"
+                        class="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-all duration-300 mx-auto w-11/12 shadow-sm border border-gray-200">
+                        <i class="fas fa-phone mr-2"></i>{% trans "Telefon" %}
+                    </button>
+
+                    <!-- Footer -->
+                    <div class="border-t border-gray-200 mt-8 pt-8 text-center">
+                        <p class="text-gray-500">&copy; {% trans "2024 Kosonsoy Stanoklar Dunyosi. Barcha huquqlar himoyalangan." %}
+                        </p>
+                       <a href="https://myaura.uz/uz/"><p class="text-blue-400">
+                    &copy; {% trans "created by AURA Group" %}
+                </p>
+                </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <!-- Hero Section with Video -->
+    <section id="home" class="hero-section">
+        <div class="video-container">
+            <video id="heroVideo" autoplay muted loop poster="/placeholder.svg?height=1080&width=1920">
+                <source src="{% static 'images/stanok.mp4' %}" type="video/mp4">
+                <source src="/placeholder-video.webm" type="video/webm">
+                {% trans "Sizning brauzeringiz video tegini qo‘llab-quvvatlamaydi." %}
+            </video>
+        </div>
+
+        <div class="video-controls">
+            <button id="playPauseBtn" class="play-pause-btn" onclick="toggleVideo()">
+                <i class="fas fa-pause text-white text-lg"></i>
+            </button>
+            <div class="text-white text-sm bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full">
+                {% trans "Stanoklar ishlab chiqarish jarayoni" %}
+            </div>
+        </div>
+
+        <div class="hero-content">
+            <div class="text-center max-w-4xl mx-auto px-4">
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
+                    {% trans "Kosonsoy" %}<span class="text-red-500">{% trans "Stanoklar" %} </span> {% trans "DUNYOSI" %}
+                </h1>
+                <p class="text-xl md:text-2xl text-white/90 mb-8 drop-shadow-lg">
+                    {% trans "Yuqori sifatli stanoklar va ehtiyot qismlar" %}
+                </p>
+                <button onclick="scrollToSection('products')"
+                    class="bg-red-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-red-600 transition-all duration-300 shadow-2xl hover:shadow-red-500/25">
+                    <a href="#products">
+                        {% trans "Mahsulotlarni ko'rish" %}</a>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stanok Video Section -->
+    <!-- Stanok Video Section -->
+    <div class="">
+        <div class="min-h-screen text-center mt-[100px] px-4">
+            <h3 class="text-2xl font-semibold text-gray-700">{% trans "Sanoat Stanogi" %}</h3>
+
+            <!-- Rasm -->
+            <div
+                class="max-w-5xl w-full mx-auto h-[300px] sm:h-[400px] border-2 border-black border-gray-400 flex items-center justify-center mt-8 rounded-xl overflow-hidden">
+                <video controls muted class="w-full h-full object-cover rounded-xl">
+                    <source src="{% static 'images/stanokpast.mp4' %}" type="video/mp4">
+                    {% trans "Sizning brauzeringiz video formatini qo‘llab-quvvatlamaydi." %}
+                </video>
+            </div>
+
+
+            <!-- Matn -->
+            <p class="mt-8 text-base sm:text-lg leading-relaxed text-gray-600 max-w-4xl mx-auto px-4">
+               {% trans "Stanok — bu metall, yog‘och yoki boshqa materiallarga mexanik ishlov beruvchi sanoat uskunasi. U kesish, burg‘ulash, frezalash, jilvirlash kabi jarayonlarni bajaradi. Zamonaviy stanoklar raqamli boshqaruv tizimi (CNC) bilan jihozlangan bo‘lib, ular aniqlik va unumdorlikni oshiradi. Sanoat korxonalarida stanoklar mahsulot sifatini yaxshilash va ishlab chiqarish tezligini oshirishda katta ahamiyatga ega." %}
+            </p>
+        </div>
+
+        <hr class="mt-[200px] border-t-2 border-gray-400 w-full">
+    </div>
+
+    <!-- Gallery -->
+
+    <div class="w-full max-w-6xl mx-auto">
+        <h1 class="text-center mb-10 text-4xl sm:text-5xl font-extrabold text-gray-800 tracking-tight">
+            {% trans "Galereya" %}
+        </h1>
+
+        <!-- Main Image -->
+        <div class="relative w-full bg-white rounded-3xl shadow-2xl overflow-hidden">
+           {% if gallery %}
+    <!-- Added auto-rotating gallery with smooth transitions -->
+    <img id="carImage" src="{{ gallery.0.image.url }}" alt="Stanok"
+        class="w-full h-[300px] sm:h-[450px] md:h-[600px] object-cover transition-all duration-1000 ease-in-out" />
+{% endif %}
+
+<!-- Previous Button -->
+<button id="prevBtn"
+    class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-300">
+    <i class="fas fa-chevron-left text-2xl"></i>
+</button>
+
+<!-- Next Button -->
+<button id="nextBtn"
+    class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-300">
+    <i class="fas fa-chevron-right text-2xl"></i>
+</button>
+
+</div>
+
+<!-- Thumbnails -->
+<div class="mt-8 flex gap-4 justify-center flex-wrap">
+    {% for item in gallery %}
+        {% if item.image %}
+            <img src="{{ item.image.url }}"
+                class="thumbnail w-24 h-24 sm:w-28 sm:h-28 object-cover rounded-xl cursor-pointer border-2 border-transparent hover:border-blue-500 transition-all duration-300 transform hover:scale-105" />
+        {% endif %}
+
+        {% for img in item.images.all %}
+            {% if img.image %}
+                <img src="{{ img.image.url }}"
+                    class="thumbnail w-24 h-24 sm:w-28 sm:h-28 object-cover rounded-xl cursor-pointer border-2 border-transparent hover:border-blue-500 transition-all duration-300 transform hover:scale-105" />
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+</div>
+
+    </div>
+
+<div class="section-divider"></div>
+    <!-- Products Section - Enhanced with Filter -->
+  <section id="products" class="mt-[100px] py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 text-gray-900">{% trans "Mahsulotlarimiz" %}</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                {% trans "Yuqori sifatli stanok ehtiyot qismlari va professional xizmatlar" %}
+            </p>
+        </div>
+
+        <!-- Product filter buttons -->
+        <div class="flex flex-wrap justify-center gap-4 mb-12">
+            <button onclick="filterProducts('all')"
+                class="filter-btn active bg-red-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-red-600 transition-all duration-300">
+                {% trans "Barchasi" %}
+            </button>
+            {% for cat in categories %}
+            <button onclick="filterProducts('{{ cat.slug }}')"
+                class="filter-btn bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 transition-all duration-300">
+                {{ cat.name }}
+            </button>
+            {% endfor %}
+        </div>
+
+        <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for pro in products %}
+            <div class="product-card bg-white rounded-xl shadow-5xl overflow-hidden border hover:shadow-xl hover:scale-105 hover:cursor-pointer transition-all duration-300"
+                 data-category="{{ pro.category.slug }}">
+                {% if pro.image %}
+                <img src="{{ pro.image.url }}" alt="{{ pro.name }}"
+                     class="w-full h-48 object-cover">
+                {% else %}
+                    <img src="{% static 'images/stanok1.jpg' %}" alt="No image" class="w-full h-48 object-cover">
+                {% endif %}
+                <div class="p-6">
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-2">{{ pro.name }}</h3>
+                    <p class="text-gray-600 mb-4 min-h-[50px]">{{ pro.description|truncatechars:80 }}</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <p class="text-2xl font-bold text-red-500">{{ pro.price|floatformat:0|intcomma }} so'm</p>
+                        <a href="{{ pro.get_absolute_url }}"
+                           class="flex items-center bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300">
+                            <i class="fas fa-shopping-cart mr-2"></i> {% trans "Batafsil" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<div class="section-divider"></div>
+
+    <!-- Fixed About Us section background to cover full screen -->
+    <section id="experience" class="min-h-screen py-20  relative"
+        style="background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('/placeholder.svg?height=1080&width=1920'); background-size: cover; background-position: center; background-attachment: fixed;">
+
+        <div class="max-w-7xl mx-auto px-4 relative ">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 text-white">
+                    {% trans "Bizning" %}<span class="text-red-500">{% trans "Haqimizda" %}</span>
+                </h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    {% trans "'Kosonsoy Stanoklar Dunoysi' MChJ 2023-yilda tashkil etilgan" %}
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card-hover bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center">
+                    <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-tools text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">{% trans "Professional Xizmat" %}</h3>
+                    <p class="text-gray-300">{% trans "Blok avtomatika stanoklari, xom g'isht stanoklari, karalar, drobilkalar, dozatorlar, qoliplar va boshqa turdagi uskunalarni ishlab chiqaradi." %}</p>
+                </div>
+
+                <div class="card-hover bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center">
+                    <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-shipping-fast text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">{% trans "Tez Yetkazib Berish" %}</h3>
+                    <p class="text-gray-300"> {% trans "Mahsulotlarimiz Qozog'iston, Qirg'iziston va Tojikiston Respublikalariga eksport qilinadi." %} </p>
+                </div>
+
+                <div class="card-hover bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center">
+                    <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-shield-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">{% trans "Siz uchun" %}</h3>
+                    <p class="text-gray-300">{% trans "Shuningdek, barcha turdagi metallarga ishlov berish xizmatini ham taklifetamiz." %}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Experience Section -->
+    <div class="section-divider"></div>
+
+    <!-- News Section - Simplified -->
+    <section id="news" class="py-20">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 text-gray-900">{% trans "Yangiliklar" %}</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                {% trans "Eng so'nggi yangiliklar va e'lonlar" %}
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="newsGrid">
+            {% for article in news_list %}
+                <div class="news-card" onclick="openNewsPage('{{ article.get_absolute_url }}')">
+                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                        {% if article.image %}
+                            <img src="{{ article.image.url }}" alt="{{ article.title }}" class="w-full h-full object-cover">
+                        {% else %}
+                            <img src="/placeholder.svg?height=300&width=500" alt="{{ article.title }}" class="w-full h-full object-cover">
+                        {% endif %}
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">{{ article.title }}</h3>
+                        <p class="text-gray-600 mb-4 min-h-[50px]">{{ article.description|truncatechars:30 }}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">{{ article.created_at|date:"d M, Y" }}</span>
+                            <button onclick="openNewsPage('{{ article.get_absolute_url }}')" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                                <i class="fas fa-eye mr-1"></i>
+                                Ko'rsatish
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-center text-gray-600 col-span-full">{% trans "Hozircha yangiliklar yo'q." %}</p>
+            {% endfor %}
+        </div>
+    </div>
+    </section>
+
+
+    <div class="section-divider"></div>
+
+    <!-- Progress Bar -->
+
+
+    <!-- Contact Section - Enhanced -->
+    <section id="contact" class="py-20 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 text-gray-900">{% trans "Bog'lanish" %}</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    {% trans "Biz bilan bog'laning va professional maslahat oling" %}
+                </p>
+            </div>
+
+            <!-- Enhanced contact section layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Left side - Contact Form -->
+
+                
+                <div class="contact-form bg-white rounded-2xl p-8 shadow-xl">
+                   <h3 class="text-2xl font-bold text-gray-900 mb-6">{% trans "Xabar yuborish" %}</h3>
+                    <form id="contactForm" method="POST" action="{% url 'index' %}">
+                        {% csrf_token %}
+                        <div class="mb-6">
+                            <label class="block text-gray-700 mb-2 font-medium">{% trans "To'liq ism" %}</label>
+                            <input type="text" id="title" name="title_uz" required placeholder="{% trans 'Ismingizni kiriting' %}"
+                                class="w-full bg-gray-50 text-gray-900 border border-gray-300 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                value="{{ form.title_uz.value|default_if_none:'' }}">
+                            {% if form.title_uz.errors %}
+                                <p class="text-red-500 text-sm mt-1">{{ form.title_uz.errors.as_text }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-gray-700 mb-2 font-medium">{% trans "Telefon raqami" %}</label>
+                            <input type="tel" id="phone" name="phone" required placeholder="+998 99 123 45 67"
+                                class="w-full bg-gray-50 text-gray-900 border border-gray-300 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                value="{{ form.phone.value|default_if_none:'' }}">
+                            {% if form.phone.errors %}
+                                <p class="text-red-500 text-sm mt-1">{{ form.phone.errors.as_text }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-gray-700 mb-2 font-medium">{% trans "Email manzili" %}</label>
+                            <input type="email" id="email" name="email" required placeholder="example@email.com"
+                                class="w-full bg-gray-50 text-gray-900 border border-gray-300 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                value="{{ form.email.value|default_if_none:'' }}">
+                            {% if form.email.errors %}
+                                <p class="text-red-500 text-sm mt-1">{{ form.email.errors.as_text }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-gray-700 mb-2 font-medium">{% trans "Xabar" %}</label>
+                            <textarea id="message" name="message_uz" rows="5" required placeholder="{% trans 'Xabaringizni kiriting...' %}"
+                                class="w-full bg-gray-50 text-gray-900 border border-gray-300 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all duration-300">{{ form.message_uz.value|default_if_none:'' }}</textarea>
+                            {% if form.message_uz.errors %}
+                                <p class="text-red-500 text-sm mt-1">{{ form.message_uz.errors.as_text }}</p>
+                            {% endif %}
+                        </div>
+                        <button type="submit"
+                            class="mt-6 w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white py-4 rounded-lg font-semibold hover:from-blue-600 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                            <span id="submitText">
+                                <i class="fas fa-paper-plane mr-2"></i>
+                                {% trans "Xabar yuborish" %}
+                            </span>
+                            <span id="submitLoading" class="hidden">
+                                <div class="loading-spinner inline-block mr-2"></div>
+                                {% trans "Yuborilmoqda..." %}
+                            </span>
+                        </button>
+                    </form>
+
+                </div>
+
+                <!-- Right side - Map and Branch Information -->
+                <div>
+                    <!-- Map Section -->
+                    <div class="mb-8">
+                        <div class="bg-gray-200 rounded-2xl h-64 flex items-center justify-center relative overflow-hidden shadow-lg">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.5!2d69.2401!3d41.2995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE3JzU4LjIiTiA2OcKwMTQnMjQuNCJF!5e0!3m2!1sen!2s!4v1"
+                                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade" class="rounded-2xl">
+                            </iframe>
+                            <div class="absolute top-4 right-4 bg-white px-3 py-1 rounded-full shadow-md">
+                                <span class="text-blue-500 text-sm font-medium">{% trans "Kengroq xaritani ko'rish" %}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Branch Information -->
+                    <div class="bg-white rounded-2xl p-6 shadow-xl">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">{% trans "Bizning filiallarimiz" %}</h3>
+                        {% for branch in branches %}
+                            <div class="{% if not forloop.last %}mb-6 pb-6 border-b border-gray-200{% endif %}">
+                                <h4 class="text-lg font-semibold text-gray-900 mb-2">{{ branch.name }}</h4>
+                                <p class="text-gray-600 mb-3">{{ branch.address }}</p>
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <a href="tel:{{ branch.phone }}"
+                                       class="flex items-center text-blue-500 hover:text-blue-600 transition-colors">
+                                        <i class="fas fa-phone mr-2"></i>
+                                        {{ branch.phone }}
+                                    </a>
+                                    {% if branch.email %}
+                                        <a href="mailto:{{ branch.email }}"
+                                           class="flex items-center text-blue-500 hover:text-blue-600 transition-colors">
+                                            <i class="fas fa-envelope mr-2"></i>
+                                            {{ branch.email }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-gray-600">{% trans "Hozircha filiallar mavjud emas." %}</p>
+                        {% endfor %}
+                    </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <!-- Footer - Enhanced with full screen background -->
+    <footer class="bg-gray-900 text-white py-12 w-full">
+        <div class="max-w-7xl mx-auto px-4">
+            <footer class="bg-gray-900 py-10">
+                <div class="container mx-auto px-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center lg:text-left">
+
+                        <!-- Logo qismi -->
+                        <div>
+                            <div class="flex items-center justify-center lg:justify-start mb-4">
+                                <div class="w-12 h-12 rounded-lg flex items-center justify-center mr-3">
+                                    <img src="{% static 'images/logo-removebg-preview.png' %}" alt="Logo" class="w-10 h-10">
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-bold text-lg">{% trans "Kosonsoy" %}</h3>
+                                    <p class="text-gray-400 text-sm">{% trans "Stanoklar Dunyosi" %}</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-400">
+                                {% trans "Рахбар: RASULOV ILYOSJON ISROILOVICH" %}
+                            </p>
+                        </div>
+
+                        <!-- Bog‘lanish -->
+                        <div>
+                            <h4 class="text-white font-semibold mb-4">{% trans "Bog‘lanish" %}</h4>
+                            <div class="space-y-2">
+                                <p class="text-gray-400"><i class="fas fa-phone mr-2"></i>+998 98 771 31 71</p>
+                                <p class="text-gray-400"><i class="fas fa-envelope mr-2"></i>info@kosonsoy.uz</p>
+                                <p class="text-gray-400"><i class="fas fa-map-marker-alt mr-2"></i>{% trans "Namangan, Kosonsoy" %}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Ijtimoiy tarmoqlar -->
+                        <div>
+                            <h4 class="text-white font-semibold mb-4">{% trans "Ijtimoiy tarmoqlar" %}</h4>
+                            <div class="flex justify-center lg:justify-start space-x-4">
+                                <a href="#"
+                                    class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors">
+                                    <i class="fab fa-facebook-f text-white"></i>
+                                </a>
+                                <a href="#"
+                                    class="w-10 h-10 bg-blue-400 rounded-lg flex items-center justify-center hover:bg-blue-500 transition-colors">
+                                    <i class="fab fa-telegram text-white"></i>
+                                </a>
+                                <a href="#"
+                                    class="w-10 h-10 bg-pink-600 rounded-lg flex items-center justify-center hover:bg-pink-700 transition-colors">
+                                    <i class="fab fa-instagram text-white"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Sertifikatlar -->
+                        <div>
+                            <h4 class="text-white font-semibold mb-4">{% trans "Sertifikatlar" %}</h4>
+                            <div class="flex justify-center lg:justify-start space-x-4">
+                                <a href="{% static 'images/sertifikat.jpg' %}" target="_blank">
+                                    <img src="{% static 'images/sertifikat.jpg' %}" alt="Sertifikat"
+                                        class="w-16 h-20 rounded-xl shadow-lg hover:scale-105 transition-transform cursor-pointer" />
+                                </a>
+                                <a href="sertifikat.pdf" target="_blank">
+                                    <img src="{% static 'images/sertifikat1.png' %}" alt="Sertifikat PDF"
+                                        class="w-16 h-20 rounded-xl shadow-lg hover:scale-105 transition-transform cursor-pointer" />
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </footer>
+
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">
+                    &copy; {% trans "2024 Kosonsoy Stanoklar Dunyosi. Barcha huquqlar himoyalangan." %}
+                </p>
+
+                <a href="https://myaura.uz/uz/"><p class="text-blue-400">
+                    &copy; {% trans "created by AURA Group" %}
+                </p>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up text-white"></i>
+    </div>
+
+    <!-- Added Product Detail Modal -->
+    <div id="productModal" class="detail-modal fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="detail-modal-content w-full">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 id="productModalTitle" class="text-3xl font-bold text-white">{% trans "Mahsulot nomi" %}</h3>
+                    <button onclick="closeProductModal()" class="text-gray-400 hover:text-white text-2xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Product Image -->
+                    <div>
+                        <div id="productModalImage"
+                            class="w-full h-80 bg-gray-700 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-24 h-24 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                        </div>
+
+                        <!-- Product Gallery -->
+                        <div class="product-gallery">
+                            <div class="gallery-image">
+                                <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div class="gallery-image">
+                                <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div class="gallery-image">
+                                <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Details -->
+                    <div>
+                        <div class="mb-6">
+                            <span id="productModalPrice" class="text-4xl font-bold text-red-500">150,000 {% trans "so'm" %}</span>
+                        </div>
+
+                        <div class="mb-6">
+                            <h4 class="text-xl font-semibold text-white mb-3">{% trans "Mahsulot haqida" %}</h4>
+                            <p id="productModalDescription" class="text-gray-300 leading-relaxed">{% trans "Bu yuqori sifatli avtomobil ehtiyot qismi bo'lib, uzoq muddat xizmat qiladi. Professional o'rnatish va kafolat bilan ta'minlanadi. Barcha mashhur avtomobil markalari uchun mos keladi." %}
+                            </p>
+                        </div>
+
+                        <div class="mb-6">
+                            <h4 class="text-xl font-semibold text-white mb-3">{% trans "Xususiyatlari" %}</h4>
+                            <ul class="text-gray-300 space-y-2">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>{% trans "Yuqori sifat" %}</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>{% trans "1 yil kafolat" %}</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>{% trans "Professional o'rnatish" %}</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>{% trans "Tez yetkazib berish" %}</li>
+                            </ul>
+                        </div>
+
+                        <div class="flex space-x-4">
+                            <button onclick="orderProduct()"
+                                class="flex-1 bg-gradient-to-r from-red-500 to-red-700 text-white py-3 px-6 rounded-lg font-semibold hover:from-red-600 hover:to-red-800 transition-all duration-300">
+                                <i class="fas fa-shopping-cart mr-2"></i>
+                                {% trans "Buyurtma berish" %}
+                            </button>
+                            <button onclick="callForProduct()"
+                                class="bg-green-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-600 transition-all duration-300">
+                                <i class="fas fa-phone mr-2"></i>
+                                {% trans "Qo'ng'iroq" %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Added News Detail Modal -->
+    <div id="newsModal" class="detail-modal fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="detail-modal-content w-full">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 id="newsModalTitle" class="text-3xl font-bold text-white">{% trans "Yangilik sarlavhasi" %}</h3>
+                    <button onclick="closeNewsModal()" class="text-gray-400 hover:text-white text-2xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <!-- News Image -->
+                <div id="newsModalImage"
+                    class="w-full h-80 bg-gray-700 rounded-lg flex items-center justify-center mb-6">
+                    <svg class="w-24 h-24 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                </div>
+
+                <!-- News Meta -->
+                <div class="flex items-center text-gray-400 mb-6">
+                    <i class="fas fa-calendar mr-2"></i>
+                    <span id="newsModalDate">{% trans "15 Dekabr, 2024" %}</span>
+                    <span class="mx-4">•</span>
+                    <i class="fas fa-user mr-2"></i>
+                    <span>{% trans "Hong Qi Uzbekistan" %}</span>
+                </div>
+
+                <!-- News Content -->
+                <div class="prose prose-invert max-w-none">
+                    <div id="newsModalContent" class="text-gray-300 leading-relaxed space-y-4">
+                        <p>{% trans "Bu yerda yangilik matni bo'ladi. Yangilik haqida batafsil ma'lumot, rasmlar va boshqa muhim tafsilotlar joylashtiriladi." %}</p>
+                        <p>{% trans "Kompaniyamiz faoliyati, yangi mahsulotlar, chegirmalar va boshqa muhim e'lonlar haqida ma'lumotlar bu yerda bo'ladi." %}</p>
+                    </div>
+                </div>
+
+                <!-- Share buttons -->
+                <div class="mt-8 pt-6 border-t border-gray-700">
+                    <h4 class="text-white font-semibold mb-4">{% trans "Ulashish:" %}</h4>
+                    <div class="flex space-x-4">
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            <i class="fab fa-facebook-f mr-2"></i>{% trans "Facebook" %}
+                        </button>
+                        <button class="bg-blue-400 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition-colors">
+                            <i class="fab fa-twitter mr-2"></i>{% trans "Twitter" %}
+                        </button>
+                        <button
+                            class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                            <i class="fab fa-whatsapp mr-2"></i>{% trans "WhatsApp" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Existing Modals -->
+    <!-- Consultation Modal -->
+    <div id="consultationModal" class="modal fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-xl p-8 max-w-md w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-white">{% trans "Konsultatsiya" %}</h3>
+                <button onclick="closeModal('consultationModal')" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <form onsubmit="submitConsultation(event)">
+                <div class="space-y-4">
+                    <input type="text" placeholder="{% trans 'Ismingiz' %}" required
+                        class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <input type="tel" placeholder="{% trans 'Telefon raqamingiz' %}" required
+                        class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <textarea placeholder="{% trans 'Qo\'shimcha ma\'lumot' %}" rows="3"
+                        class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"></textarea>
+                </div>
+                <button type="submit"
+                    class="w-full bg-gradient-to-r from-red-500 to-red-700 text-white py-3 rounded-lg font-semibold hover:from-red-600 hover:to-red-800 transition-all duration-300 mt-6">
+                    {% trans "Konsultatsiya so'rash" %}
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Phone Modal -->
+    <div id="phoneModal" class="modal fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-xl p-8 max-w-md w-full text-center">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-white">{% trans "Telefon raqamlarimiz" %}</h3>
+                <button onclick="closeModal('phoneModal')" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <p class="text-gray-400 text-sm">{% trans "Bosh ofis" %}</p>
+                    <p class="text-white text-xl font-bold">+998908887070</p>
+                </div>
+
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <p class="text-gray-400 text-sm">{% trans "Aloqa" %}</p>
+                    <p class="text-white text-xl font-bold">+998945050634</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function toggleVideo() {
+  const video = document.getElementById("heroVideo")
+  const btn = document.getElementById("playPauseBtn")
+
+  if (video.paused) {
+    video.play()
+    btn.innerHTML = '<i class="fas fa-pause text-white text-lg"></i>'
+  } else {
+    video.pause()
+    btn.innerHTML = '<i class="fas fa-play text-white text-lg"></i>'
+  }
+}
+        // Mobile menu toggle
+function toggleMobileMenu() {
+  const mobileMenu = document.getElementById("mobileMenu")
+  mobileMenu.classList.toggle("hidden")
+}
+
+const closeMobileMenu = () => {
+  document.getElementById("mobileMenu").classList.add("hidden")
+}
+        function initializeProbar() {
+
+            window.addEventListener("scroll", () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = (scrollTop / docHeight) * 100;
+
+                const probar = document.getElementById("probar");
+                if (probar) {
+                    probar.style.width = scrollPercent + "%";
+            }
+          });
+        }
+
+        // DOM yuklangandan keyin ishga tushadi
+        document.addEventListener("DOMContentLoaded", () => {
+          initializeProbar();
+        });
+        const categoriesJson = '{{ categories_json|safe }}';
+        const productsJson = '{{ products_json|safe }}';
+        let categories = [];
+        let products = [];
+
+        try {
+            categories = JSON.parse(categoriesJson).map(cat => ({ slug: cat.fields.slug, name: cat.fields.name }));
+            products = JSON.parse(productsJson);
+            console.log("Categories loaded:", categories);
+            console.log("Products loaded:", products);
+        } catch (e) {
+            console.error("JSON parsing error:", e);
+        }
+
+        // Modal functionality for consultation
+function openConsultationModal() {
+  document.getElementById("consultationModal").classList.remove("hidden")
+}
+
+function closeModal(modalId) {
+  document.getElementById(modalId).classList.add("hidden")
+}
+
+// Form submission for consultation
+async function submitConsultation(event) {
+  event.preventDefault()
+
+  const formData = new FormData(event.target)
+  const name = formData.get("name") || event.target.querySelector('input[type="text"]').value
+  const phone = formData.get("phone") || event.target.querySelector('input[type="tel"]').value
+  const message = formData.get("message") || event.target.querySelector("textarea").value || "Konsultatsiya so'rovi"
+  TELEGRAM_BOT_TOKEN ="8247224955:AAHeXJG4NFRCTeRn95HaVlbW6KgBlFt8gMM"
+  TELEGRAM_CHAT_ID ="6557500438"
+  const telegramMessage = `
+📩 Yangi konsultatsiya so'rovi:
+👤 Ism: ${name}
+📞 Telefon: ${phone}
+💬 Xabar: ${message}
+🕐 Vaqt: ${new Date().toLocaleString("uz-UZ")}
+  `
+
+
+  try {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: telegramMessage,
+      }),
+    })
+
+    showNotification("Konsultatsiya so'rovi yuborildi!")
+    closeModal("consultationModal")
+    event.target.reset()
+  } catch (err) {
+    console.error("Xatolik:", err)
+    showNotification("Xatolik yuz berdi!", "error")
+  }
+}
+
+
+    function showNotification(message, type = "success") {
+        const notification = document.getElementById("notification")
+        const notificationText = document.getElementById("notificationText")
+
+    notification.className = `notification px-6 py-3 rounded-lg shadow-lg ${type === "error" ? "bg-red-500" : "bg-green-500"
+    } text-white`
+
+    notificationText.textContent = message
+    notification.classList.add("show")
+
+    setTimeout(() => {
+        notification.classList.remove("show")
+  }, 4000)
+}
+        // Modal functionality for phone
+function openPhoneModal() {
+  document.getElementById("phoneModal").classList.remove("hidden")
+}
+
+function closeModal(modalId) {
+  document.getElementById(modalId).classList.add("hidden")
+}
+
+// Close modals when clicking outside
+document.addEventListener("click", (event) => {
+  const modals = document.querySelectorAll(".modal, .detail-modal")
+  modals.forEach((modal) => {
+    if (event.target === modal) {
+      modal.classList.add("hidden")
+      document.body.style.overflow = "auto"
+    }
+  })
+})
+
+// Keyboard shortcuts
+document.addEventListener("keydown", (event) => {
+  // ESC to close modals
+  if (event.key === "Escape") {
+    document.querySelectorAll(".modal, .detail-modal").forEach((modal) => {
+      modal.classList.add("hidden")
+    })
+    document.body.style.overflow = "auto"
+  }
+})
+        async function sendToTelegram(formData) {
+  try {
+    const message = `
+🔔 Yangi xabar Kosonsoy Stanoklar saytidan!
+
+👤 Ism: ${formData.fullName}
+📧 Email: ${formData.email}
+📞 Telefon: ${formData.phone}
+💬 Xabar: ${formData.message}
+🕐 Vaqt: ${formData.timestamp}
+
+#yangi_xabar #kosonsoy_stanoklar
+        `
+
+    const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+        parse_mode: "HTML",
+      }),
+    })
+
+    const result = await response.json()
+    return result.ok
+  } catch (error) {
+    console.error("Telegram yuborishda xatolik:", error)
+    return false
+  }
+}
+
+    </script>
+
+    <script src="{% static 'js/gallery.js' %}"></script>
+
+
+
+</body>
+</html>

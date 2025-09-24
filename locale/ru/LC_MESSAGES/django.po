@@ -1,0 +1,460 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-17 16:11+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:7
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:204
+msgid "The install worked successfully! Congratulations!"
+msgstr "Установка работала успешно! Поздравляю!"
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:206
+#, python-format
+msgid ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:208
+#, python-format
+msgid ""
+"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
+"configured any URLs."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:217
+msgid "Django Documentation"
+msgstr "Джанго документация"
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:218
+msgid "Topics, references, &amp; how-to’s"
+msgstr "Темы, ссылки и amp; Как-с"
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:226
+msgid "Tutorial: A Polling App"
+msgstr "Учебное пособие: приложение для опроса"
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:227
+msgid "Get started with Django"
+msgstr "Начните с Джанго"
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:235
+msgid "Django Community"
+msgstr "Джанго сообщество"
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:236
+msgid "Connect, get help, or contribute"
+msgstr "Подключиться, получить помощь или внести свой вклад"
+
+#: .\env\Lib\site-packages\django\views\templates\directory_index.html:8
+#: .\env\Lib\site-packages\django\views\templates\directory_index.html:11
+#, python-format
+msgid "Index of %(directory)s"
+msgstr "Index of %(directory)s"
+
+#: .\templates\base.html:8 .\templates\news_detail.html:57
+msgid "Kosonsoy Stanoklar Dunyosi"
+msgstr "Мир машины Козонсой"
+
+#: .\templates\base.html:52 .\templates\index.html:467
+#: .\templates\index.html:619 .\templates\index.html:970
+msgid "Kosonsoy"
+msgstr "Козонсой"
+
+#: .\templates\base.html:53 .\templates\index.html:468
+#: .\templates\index.html:971
+msgid "Stanoklar Dunyosi"
+msgstr "Машинный мир"
+
+#: .\templates\base.html:60 .\templates\base.html:111
+#: .\templates\index.html:476 .\templates\index.html:545
+msgid "Bosh sahifa"
+msgstr "Дом"
+
+#: .\templates\base.html:63 .\templates\base.html:112
+#: .\templates\index.html:480 .\templates\index.html:547
+msgid "Mahsulotlar"
+msgstr "Продукция"
+
+#: .\templates\base.html:66 .\templates\base.html:113
+#: .\templates\index.html:484 .\templates\index.html:549
+msgid "Biz haqimizda"
+msgstr "о нас"
+
+#: .\templates\base.html:69 .\templates\base.html:114
+#: .\templates\index.html:488 .\templates\index.html:551
+#: .\templates\index.html:803
+msgid "Yangiliklar"
+msgstr "Новости"
+
+#: .\templates\base.html:72 .\templates\base.html:115
+#: .\templates\index.html:492 .\templates\index.html:553
+#: .\templates\index.html:848
+msgid "Bog'lanish"
+msgstr "Связь"
+
+#: .\templates\base.html:85 .\templates\base.html:130 .\templates\base.html:178
+#: .\templates\index.html:507 .\templates\index.html:573
+#: .\templates\index.html:1206
+msgid "Konsultatsiya"
+msgstr "Консультация"
+
+#: .\templates\base.html:89 .\templates\base.html:134
+#: .\templates\index.html:512 .\templates\index.html:578
+#: .\templates\product_detail.html:113
+msgid "Telefon"
+msgstr "Телефон"
+
+#: .\templates\base.html:138 .\templates\index.html:583
+#: .\templates\index.html:1030
+msgid "2024 Kosonsoy Stanoklar Dunyosi. Barcha huquqlar himoyalangan."
+msgstr "2024 Мир машины Козонсой. Все права защищены."
+
+#: .\templates\base.html:154 .\templates\index.html:1235
+msgid "Telefon raqamlarimiz"
+msgstr "Наши телефоны"
+
+#: .\templates\base.html:163 .\templates\index.html:1245
+msgid "Bosh ofis"
+msgstr "Головной офис"
+
+#: .\templates\base.html:167 .\templates\index.html:1250
+msgid "Aloqa"
+msgstr "Контакт"
+
+#: .\templates\base.html:187 .\templates\index.html:1216
+msgid "Ismingiz"
+msgstr "Ваше имя"
+
+#: .\templates\base.html:188 .\templates\index.html:1218
+msgid "Telefon raqamingiz"
+msgstr "Ваш номер телефона"
+
+#: .\templates\base.html:189 .\templates\index.html:1220
+msgid "Qo\\"
+msgstr "Сайга"
+
+#: .\templates\base.html:192 .\templates\index.html:1225
+msgid "Konsultatsiya so'rash"
+msgstr "Чтобы спросить консультацию"
+
+#: .\templates\index.html:10
+msgid "KOSONSOY STANOKLAR DUNYOSI"
+msgstr "Мир машины Козонсой"
+
+#: .\templates\index.html:452
+msgid "Xabar yuborildi!"
+msgstr "Сообщение отправлено!"
+
+#: .\templates\index.html:586 .\templates\index.html:1034
+msgid "created by AURA Group"
+msgstr "Создано Aura Group"
+
+#: .\templates\index.html:603
+msgid "Sizning brauzeringiz video tegini qo‘llab-quvvatlamaydi."
+msgstr "Ваш браузер не поддерживает видеотеги."
+
+#: .\templates\index.html:612
+msgid "Stanoklar ishlab chiqarish jarayoni"
+msgstr "Производственный процесс"
+
+#: .\templates\index.html:619
+msgid "Stanoklar"
+msgstr "Машины"
+
+#: .\templates\index.html:619
+msgid "DUNYOSI"
+msgstr "Мир"
+
+#: .\templates\index.html:622
+msgid "Yuqori sifatli stanoklar va ehtiyot qismlar"
+msgstr "Высококачественные машины и запасные части"
+
+#: .\templates\index.html:626
+msgid "Mahsulotlarni ko'rish"
+msgstr "Просмотреть продукты"
+
+#: .\templates\index.html:636
+msgid "Sanoat Stanogi"
+msgstr "Промышленная машина"
+
+#: .\templates\index.html:643
+msgid "Sizning brauzeringiz video formatini qo‘llab-quvvatlamaydi."
+msgstr "Ваш браузер не поддерживает видеоформат."
+
+
+#: .\templates\index.html:665
+msgid "Galereya"
+msgstr "Галерея"
+
+#: .\templates\index.html:704
+msgid "Mahsulotlarimiz"
+msgstr "Наши продукты"
+
+#: .\templates\index.html:706
+msgid "Yuqori sifatli stanok ehtiyot qismlari va professional xizmatlar"
+msgstr "Высококачественные настольные автомобили и профессиональные услуги"
+
+#: .\templates\index.html:714
+msgid "Barchasi"
+msgstr "Все"
+
+#: .\templates\index.html:741
+msgid "Batafsil"
+msgstr "Подробный"
+
+#: .\templates\index.html:759
+msgid "Bizning"
+msgstr "Наш"
+
+#: .\templates\index.html:759
+msgid "Haqimizda"
+msgstr "О нас"
+
+#: .\templates\index.html:762
+msgid "'Kosonsoy Stanoklar Dunoysi' MChJ 2023-yilda tashkil etilgan"
+msgstr "Мир Kosonsoy Machine Denseo 'LLC был основан в 2023 году"
+
+#: .\templates\index.html:771
+msgid "Professional Xizmat"
+msgstr "Профессиональный сервис"
+
+#: .\templates\index.html:772
+msgid "Blok avtomatika stanoklari, xom g'isht stanoklari, karalar, drobilkalar, dozatorlar, qoliplar va boshqa turdagi uskunalarni ishlab chiqaradi."
+msgstr "Блок производит машину автоматизации, Rud Brick Plays, Caches, Drobs, дозировки, плесени и другое оборудование."
+
+#: .\templates\index.html:780
+msgid "Tez Yetkazib Berish"
+msgstr "Быстрая доставка"
+
+#: .\templates\index.html:789
+msgid "Siz uchun"
+msgstr "Для тебя"
+
+#: .\templates\index.html:805
+msgid "Eng so'nggi yangiliklar va e'lonlar"
+msgstr "Большинство последних новостей и рекламы"
+
+#: .\templates\index.html:832
+msgid "Hozircha yangiliklar yo'q."
+msgstr "Там еще нет новостей."
+
+#: .\templates\index.html:850
+msgid "Biz bilan bog'laning va professional maslahat oling"
+msgstr "Свяжитесь с нами и получите профессиональные советы"
+
+#: .\templates\index.html:858 .\templates\index.html:900
+msgid "Xabar yuborish"
+msgstr "Отправить сообщение"
+
+#: .\templates\index.html:862
+msgid "To'liq ism"
+msgstr "Полное имя"
+
+#: .\templates\index.html:871
+msgid "Telefon raqami"
+msgstr "Номер телефона"
+
+#: .\templates\index.html:880
+msgid "Email manzili"
+msgstr "Адрес электронной почты"
+
+#: .\templates\index.html:889
+msgid "Xabar"
+msgstr "Сообщение"
+
+#: .\templates\index.html:890
+msgid "Xabaringizni kiriting..."
+msgstr "Введите свое сообщение ..."
+
+#: .\templates\index.html:904
+msgid "Yuborilmoqda..."
+msgstr "Отправляются ..."
+
+#: .\templates\index.html:920
+msgid "Kengroq xaritani ko'rish"
+msgstr "Посмотреть более широкую карту"
+
+#: .\templates\index.html:927
+msgid "Bizning filiallarimiz"
+msgstr "Наши ветви"
+
+#: .\templates\index.html:948
+msgid "Hozircha filiallar mavjud emas."
+msgstr "В настоящее время есть универсальные филиалы."
+
+#: .\templates\index.html:975
+msgid "Рахбар: RASULOV ILYOSJON ISROILOVICH"
+msgstr "Урок: Расулов ​​Алиясджон Ишрайлович"
+
+#: .\templates\index.html:981
+msgid "Bog‘lanish"
+msgstr "Связь"
+
+#: .\templates\index.html:985
+msgid "Namangan, Kosonsoy"
+msgstr "Наманган, Козонсой"
+
+#: .\templates\index.html:992
+msgid "Ijtimoiy tarmoqlar"
+msgstr "Социальные сети"
+
+#: .\templates\index.html:1011
+msgid "Sertifikatlar"
+msgstr "Сертификаты"
+
+#: .\templates\index.html:1051
+msgid "Mahsulot nomi"
+msgstr "Название продукта"
+
+#: .\templates\index.html:1101 .\templates\product_detail.html:67
+msgid "so'm"
+msgstr "сум"
+
+#: .\templates\index.html:1105 .\templates\product_detail.html:71
+msgid "Mahsulot haqida"
+msgstr "О продукте"
+
+#: .\templates\index.html:1106
+msgid "Bu yuqori sifatli avtomobil ehtiyot qismi bo'lib, uzoq muddat xizmat qiladi. Professional o'rnatish va kafolat bilanta'minlanadi. Barcha mashhur avtomobil markalari uchun mos keladi."
+msgstr "Этот высококачественный автомобиль - автомобиль, обслуживающий в течение длительного времени. Профессиональная установка и гарантия. Подходит для всех популярных автомобильных брендов."
+
+#: .\templates\index.html:1114 .\templates\product_detail.html:87
+msgid "Xususiyatlari"
+msgstr "Функции"
+
+#: .\templates\index.html:1116 .\templates\product_detail.html:99
+msgid "Yuqori sifat"
+msgstr "Высокое качество"
+
+#: .\templates\index.html:1117
+msgid "1 yil kafolat"
+msgstr "1 год гарантия"
+
+#: .\templates\index.html:1118
+msgid "Professional o'rnatish"
+msgstr "Профессиональная установка"
+
+#: .\templates\index.html:1119 .\templates\product_detail.html:102
+msgid "Tez yetkazib berish"
+msgstr "Быстрая доставка"
+
+#: .\templates\index.html:1127
+msgid "Buyurtma berish"
+msgstr "Заказывающий"
+
+#: .\templates\index.html:1132
+msgid "Qo'ng'iroq"
+msgstr "Вызов"
+
+#: .\templates\index.html:1146
+msgid "Yangilik sarlavhasi"
+msgstr "Название новостей"
+
+#: .\templates\index.html:1165
+msgid "15 Dekabr, 2024"
+msgstr "15 декабря 2024 года"
+
+#: .\templates\index.html:1168
+msgid "Hong Qi Uzbekistan"
+msgstr "Хонг Ци Узбекистан"
+
+#: .\templates\index.html:1174
+msgid "Bu yerda yangilik matni bo'ladi. Yangilik haqida batafsil ma'lumot, rasmla va boshqa muhim tafsilotlar joylashtiriladi."
+msgstr "Здесь будет текстовый текст. Подробная информация об инновациях, фотографиях и других важных деталях будет опубликована."
+
+#: .\templates\index.html:1176
+msgid "Kompaniyamiz faoliyati, yangi mahsulotlar, chegirmalar va boshqa muhim e'lonlar haqida ma'lumotlar bu yerda bo'ladi."
+msgstr "Информация о деятельности нашей компании, новых продуктов, скидок и других важных постов будет здесь."
+
+#: .\templates\index.html:1183
+msgid "Ulashish:"
+msgstr "Делиться:"
+
+#: .\templates\index.html:1186
+msgid "Facebook"
+msgstr "Facebook"
+
+#: .\templates\index.html:1189
+msgid "Twitter"
+msgstr "Twitter"
+
+#: .\templates\index.html:1193
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+#: .\templates\news_detail.html:4
+msgid " - Kosonsoy Stanoklar Dunyosi"
+msgstr "- Мир машины Козонсой"
+
+#: .\templates\news_detail.html:61
+msgid "ko'rishlar"
+msgstr "Виды"
+
+#: .\templates\news_detail.html:77
+msgid "Batafsil ma'lumot uchun bizga murojaat qiling."
+msgstr "Свяжитесь с нами для получения дополнительной информации."
+
+#: .\templates\news_detail.html:78
+msgid "Telefon: +998 987713171"
+msgstr "Телефон: +998 987713171"
+
+#: .\templates\product_detail.html:6
+msgid "CNC Stanok Ehtiyot Qismlari - Kosonsoy Stanoklar Dunyosi"
+msgstr "Запасные части с ЧПУ - мировой мировой мир Козонсой"
+
+#: .\templates\product_detail.html:36
+msgid "🎬 Video"
+msgstr "🎬 Видео"
+
+#: .\templates\product_detail.html:47
+msgid "Rasm mavjud emas"
+msgstr "Картинка недоступна"
+
+#: .\templates\product_detail.html:76
+msgid "Professional CNC stanoklar uchun yuqori sifatli ehtiyot qismlar. Uzoq muddat xizmat qiladi va ishonchli. Yuqori sifatli materialdan tayyorlangan vaxalqaro standartlarga javob beradi."                          
+msgstr "Высокие запасные части для профессиональных станций ЧПУ. Давнее время служит и надежно. Соревнования и международные стандарты, сделанные из высококачественного материала. "
+
+#: .\templates\product_detail.html:100
+msgid "2 yil kafolat"
+msgstr "2 года гарантия"
+
+#: .\templates\product_detail.html:101
+msgid "Professional o‘rnatish"
+msgstr "Профессиональная установка"
+
+#: .\templates\product_detail.html:110
+msgid "Buyurtma berish uchun bog‘lanish"
+msgstr "Контакт к заказу"
+
+
+#: .\templates\index.html:650
+msgid "Stanok — bu metall, yog‘och yoki boshqa materiallarga mexanik ishlov beruvchi sanoat uskunasi. U kesish, burg‘ulash, frezalash, jilvirlash kabi jarayonlarni bajaradi. Zamonaviy stanoklar raqamli boshqaruv tizimi (CNC) bilan jihozlangan bo‘lib, ular aniqlik va unumdorlikni oshiradi. Sanoat korxonalarida stanoklar mahsulot sifatini yaxshilash va ishlab chiqarish tezligini oshirishda katta ahamiyatga ega."
+msgstr "Станок — это промышленное оборудование для механической обработки металла, дерева или других материалов. Он выполняет такие процессы, как резка, сверление, фрезерование и шлифование. Современные станки оснащены системой числового программного управления (ЧПУ), что повышает точность и производительность. На промышленных предприятиях станки имеют большое значение для улучшения качества продукции и ускорения производства."
+
+msgid "Mahsulotlarimiz Qozog'iston, Qirg'iziston va Tojikiston Respublikalariga eksport qilinadi."
+msgstr "Наша продукция экспортируется в Республики Казахстан, Кыргызстан и Таджикистан."
+
+msgid "Shuningdek, barcha turdagi metallarga ishlov berish xizmatini ham taklifetamiz."
+msgstr "Мы также предлагаем все виды услуг по обработке металла."
+
+msgid "Ismingizni kiriting"
+msgstr "Введите свое имя"

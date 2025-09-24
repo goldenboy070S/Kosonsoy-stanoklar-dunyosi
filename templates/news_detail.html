@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+{{ news.title }}{% blocktrans %} - Kosonsoy Stanoklar Dunyosi{% endblocktrans %}
+{% endblock %}
+
+{% block extra_head %}
+<style>
+    .news-image {
+        width: 100%;
+        height: 300px;
+        background: var(--bg-secondary);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+
+    .news-content {
+        line-height: 1.8;
+    }
+
+    .news-content p {
+        margin-bottom: 20px;
+    }
+
+    .news-content ul {
+        margin: 20px 0;
+        padding-left: 20px;
+    }
+
+    .news-content li {
+        margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .news-image {
+            height: 200px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="pt-24 pb-20">
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="text-center mb-12">
+            <h1 id="newsTitle" class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">{{ news.title }}</h1>
+            <div class="flex flex-col sm:flex-row items-center justify-center text-gray-600 space-y-2 sm:space-y-0 sm:space-x-6 mb-8">
+                <div class="flex items-center">
+                    <i class="fas fa-calendar mr-2"></i>
+                    <span id="newsDate">{{ news.created_at|date:"d M, Y" }}</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-user mr-2"></i>
+                    <span>{% trans "Kosonsoy Stanoklar Dunyosi" %}</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-eye mr-2"></i>
+                    <span>{{ news.views }} {% trans "ko'rishlar" %}</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="newsImage" class="news-image">
+            {% if news.image %}
+                <img src="{{ news.image.url }}" alt="{{ news.title }}" class="w-full h-full object-cover">
+            {% else %}
+                <i class="fas fa-newspaper text-6xl text-gray-400"></i>
+            {% endif %}
+        </div>
+
+        <div class="news-content">
+            <div id="newsContent" class="text-gray-700 text-lg">
+                {{ news.description|safe }}
+                <p>{% blocktrans %}Batafsil ma'lumot uchun bizga murojaat qiling.{% endblocktrans %}</p>
+                <p>{% trans "Telefon: +998 987713171" %}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
