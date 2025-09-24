@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 import asyncio
 from aiogram import Bot
 from asgiref.sync import async_to_sync
+from django.db.models import F
 
 load_dotenv()
 
@@ -80,8 +81,18 @@ class NewsDetailView(DetailView):
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        obj.views += 1
-        obj.save(update_fields=["views"])
+        request = self.request  
+
+        viewed = request.session.get('viewed_news', [])
+        proj_id = str(obj.pk)
+
+        # Agar foydalanuvchi ushbu projectni ilgari ko‘rmagan bo‘lsa
+        if proj_id not in viewed:
+            type(obj).objects.filter(pk=obj.pk).update(views=F('views') + 1)
+            obj.refresh_from_db()  # yangilangan view ni olish
+            viewed.append(proj_id)  
+            request.session['viewed_news'] = viewed  
+
         return obj
 
 
